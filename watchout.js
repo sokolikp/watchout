@@ -1,11 +1,11 @@
 // start slingin' some d3 here.
 
 //initialize svg gameBoard
-var gameBoardDimensions = 1000;
+var gameBoardDimensions = 800;
 var numEnemies = 10;
-var enemyRadius = 30;
+var enemyRadius = 50;
 var enemiesCollection = d3.range(numEnemies);
-var playerRadius = 40;
+var playerRadius = 60;
 var currX, currY;
 var collisionCount = 0;
 var playerScore = 0;
@@ -27,10 +27,10 @@ var updateScore = function() {
 var detectCollision = function(enemy, currX, currY) {
   var enemyX = enemy.attr('x');
   var enemyY = enemy.attr('y');
+  // console.log(enemy.attr('checker'));
+  // console.log(checkCollision)
   if (checkCollision(enemy) && enemy.attr('checker') === 'false') {
     enemy.attr('checker', true);
-    // collisionCount++
-    //console.log(collisionCount);
     updateScore();
   }
   else if(!checkCollision(enemy)  && enemy.attr('checker') === 'true') {
@@ -41,11 +41,12 @@ var detectCollision = function(enemy, currX, currY) {
 var checkCollision = function(enemy) {
     var playerObj = d3.select('.good-guy');
     var radiusSum, separation, xDiff, yDiff;
-    radiusSum = parseFloat(enemy.attr('r')) + parseFloat(playerObj.attr('r'));
-    xDiff = parseFloat(enemy.attr('x')) - parseFloat(playerObj.attr('x'));
-    yDiff = parseFloat(enemy.attr('y')) - parseFloat(playerObj.attr('y'));
+    radiusSum = parseFloat(enemy.attr('height')/2) + parseFloat(playerObj.attr('height')/2);
+    xDiff = parseFloat(enemy.attr('x')/2) - parseFloat(playerObj.attr('x')/2);
+    yDiff = parseFloat(enemy.attr('y')/2) - parseFloat(playerObj.attr('y')/2);
     separation = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
     if (separation < radiusSum) {
+      // console.log('collision at: ' + enemy.attr('x') + ' ' + enemy.attr('y'));
       return true;
     }
     else {
@@ -57,8 +58,8 @@ var tweenWithCollisionDetection = function(endData) {
   var endPos, enemy, startPos;
   enemy = d3.select(this);
   startPos = {
-    x: parseFloat(enemy.attr('x')),
-    y: parseFloat(enemy.attr('y'))
+    x: parseFloat(enemy.attr('x')+enemyRadius/2),
+    y: parseFloat(enemy.attr('y')+enemyRadius/2)
   };
   endPos = {
     x: (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10))),
@@ -91,37 +92,41 @@ var drag = d3.behavior.drag()
       d3.select(this).attr({
         'y': currY - playerRadius/2});
     }
-    //collision control
-    //detectCollision(badGuys, currX, currY);
+
 });
+
+// d3.select('.add').on('click', function() {
+//   numEnemies += 5;
+//   enemiesCollection = d3.range(numEnemies);
+//   enemies.selectAll('.image').data(enemiesCollection)
+//   .enter().append('image')
+//   .attr({'x': function() {
+//     return (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10)));
+//   },
+//   'y': function() {
+//     return (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10)));
+//   },
+//   'xlink:href': 'broccoli.png',
+//   'width': enemyRadius,
+//   'height': enemyRadius,
+//   'class': 'bad-guys',
+//   'checker': false});
+// });
+
+// d3.select('.remove').on('click', function() {
+//   numEnemies -= 5;
+//   enemiesCollection = d3.range(numEnemies);
+//   enemies.selectAll('.image').data(enemiesCollection)
+//   .remove().exit();
+// });
 
 var enemyMove = function() {
   enemies.selectAll('.bad-guys')
     .transition().duration(1000)
-    // .attr({'x': function() {
-    //     return (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10)));
-    //   },
-    //   'y': function() {
-    //     return (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10)));
-    //   }
-    // })
-    // .transition().duration(2000)
     .tween('custom', tweenWithCollisionDetection);
   d3.timer(enemyMove, 1000);
   return true;
 };
-
-// var interpTimer = function(selection) {
-//   console.log(selection);
-//   selection.each(function(){
-//     console.log('hi');
-//    // return [d3.select(this).attr('x'),d3.select(this).attr('y')];
-//    console.log('player: ' + player);
-//    detectCollision(player, d3.select(this).attr('x'), d3.select(this).attr('y'));
-//   })
-//   d3.timer(interpTimer(selection), 10);
-//   return true;
-// };
 
 var gameBoard = d3.select('body')
   .append('svg')
@@ -161,7 +166,6 @@ var badGuys = enemies.selectAll('.bad-guys');
 var player = d3.select('.gameBoard')
   .append('svg')
   .attr({'class': 'player'});
-  //.append('image-svg');
 
 player.selectAll('image').data([0])
   .enter()
@@ -179,7 +183,5 @@ player.selectAll('image').data([0])
 
 var playerSelection = player.select('.good-guy');
 
-// var touch = d3.event.touch(enemies);
 
 enemyMove();
-// interpTimer(badGuys);

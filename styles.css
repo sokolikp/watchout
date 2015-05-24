@@ -12,3 +12,12 @@ Feel free to use it if you like. */
   background-image: url("pizza.png");
   background-color: #cccccc;
 }*/
+
+.gameBoard {
+  /*top: window.height()/2;*/
+  /*left: center;*/
+}
+
+.button {
+  float: right;
+}
