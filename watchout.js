@@ -96,10 +96,18 @@ var drag = d3.behavior.drag()
 });
 
 // d3.select('.add').on('click', function() {
-//   numEnemies += 5;
-//   enemiesCollection = d3.range(numEnemies);
-//   enemies.selectAll('.image').data(enemiesCollection)
-//   .enter().append('image')
+//   // numEnemies += 5;
+//   for(var i=numEnemies; i<numEnemies+5; i++) {
+//     enemiesCollection.push(i);
+//   }
+//   var newRange = d3.range(5);
+//   // console.log(enemiesCollection);
+//   // enemiesCollection = enemiesCollection.concat(newRange);
+//   console.log(enemiesCollection);
+//   // enemiesCollection = d3.range(numEnemies);
+//   enemies.selectAll('.image').data(newRange)
+//   .enter()
+//   .append('image')
 //   .attr({'x': function() {
 //     return (enemyRadius + 10) + Math.random() * (gameBoardDimensions - (2 * (enemyRadius + 10)));
 //   },
@@ -115,9 +123,14 @@ var drag = d3.behavior.drag()
 
 // d3.select('.remove').on('click', function() {
 //   numEnemies -= 5;
-//   enemiesCollection = d3.range(numEnemies);
+//   for (var i = 0; i < 5; i ++) {
+//     enemiesCollection.pop();
+//   }
+//   // enemiesCollection.splice(enemiesCollection.length - 5);
+//   // console.log(enemiesCollection);
 //   enemies.selectAll('.image').data(enemiesCollection)
-//   .remove().exit();
+//   .exit()
+//   .remove();
 // });
 
 var enemyMove = function() {
